@@ -9,7 +9,8 @@ spec:
   replicas: 1
   strategy:
     blueGreen:
-      activeSlot: blue
+      activeService: productcatalogservice
+      previewService: productcatalogservice-preview
       autoPromotionEnabled: false
   selector:
     matchLabels:
@@ -61,6 +62,21 @@ apiVersion: v1
 kind: Service
 metadata:
   name: productcatalogservice
+  labels:
+    app: productcatalogservice
+spec:
+  type: ClusterIP
+  selector:
+    app: productcatalogservice
+  ports:
+  - name: grpc
+    port: 3550
+    targetPort: 3550
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: productcatalogservice-preview
   labels:
     app: productcatalogservice
 spec:
