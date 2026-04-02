@@ -9,7 +9,8 @@ spec:
   replicas: 1
   strategy:
     blueGreen:
-      activeSlot: blue
+      activeService: shippingservice
+      previewService: shippingservice-preview
       autoPromotionEnabled: false
   selector:
     matchLabels:
@@ -61,6 +62,21 @@ apiVersion: v1
 kind: Service
 metadata:
   name: shippingservice
+  labels:
+    app: shippingservice
+spec:
+  type: ClusterIP
+  selector:
+    app: shippingservice
+  ports:
+  - name: grpc
+    port: 50051
+    targetPort: 50051
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shippingservice-preview
   labels:
     app: shippingservice
 spec:

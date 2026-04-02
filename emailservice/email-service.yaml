@@ -9,7 +9,8 @@ spec:
   replicas: 1
   strategy:
     blueGreen:
-      activeSlot: blue
+      activeService: emailservice
+      previewService: emailservice-preview
       autoPromotionEnabled: false
   selector:
     matchLabels:
@@ -63,6 +64,21 @@ apiVersion: v1
 kind: Service
 metadata:
   name: emailservice
+  labels:
+    app: emailservice
+spec:
+  type: ClusterIP
+  selector:
+    app: emailservice
+  ports:
+  - name: grpc
+    port: 5000
+    targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: emailservice-preview
   labels:
     app: emailservice
 spec:
