@@ -67,3 +67,10 @@ spec:
   - name: tcp-redis
     port: 6379
     targetPort: 6379
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: redis-cart
+imagePullSecrets:
+- name: harbor-pull-secret
