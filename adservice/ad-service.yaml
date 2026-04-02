@@ -1,11 +1,16 @@
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: adservice
   labels:
     app: adservice
 spec:
+  replicas: 1
+  strategy:
+    blueGreen:
+      activeSlot: blue
+      autoPromotionEnabled: false
   selector:
     matchLabels:
       app: adservice
