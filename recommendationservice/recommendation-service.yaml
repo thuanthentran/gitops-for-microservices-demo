@@ -21,6 +21,7 @@ spec:
         app: recommendationservice
     spec:
       serviceAccountName: recommendationservice
+      terminationGracePeriodSeconds: 5
       securityContext:
         fsGroup: 1000
         runAsGroup: 1000

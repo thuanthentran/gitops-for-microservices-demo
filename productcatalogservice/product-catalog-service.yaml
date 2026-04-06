@@ -21,6 +21,7 @@ spec:
         app: productcatalogservice
     spec:
       serviceAccountName: productcatalogservice
+      terminationGracePeriodSeconds: 5
       securityContext:
         fsGroup: 1000
         runAsGroup: 1000
