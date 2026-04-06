@@ -99,7 +99,9 @@ spec:
   ports:
   - name: http
     port: 80
+    protocol: TCP
     targetPort: 8080
+    service: ''
 ---
 apiVersion: v1
 kind: Service
@@ -114,7 +116,9 @@ spec:
   ports:
   - name: http
     port: 80
+    protocol: TCP
     targetPort: 8080
+    service: ''
 ---
 apiVersion: v1
 kind: ServiceAccount

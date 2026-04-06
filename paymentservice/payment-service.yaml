@@ -72,7 +72,9 @@ spec:
   ports:
   - name: grpc
     port: 50051
+    protocol: TCP
     targetPort: 50051
+    service: ''
 ---
 apiVersion: v1
 kind: Service
@@ -87,7 +89,9 @@ spec:
   ports:
   - name: grpc
     port: 50051
+    protocol: TCP
     targetPort: 50051
+    service: ''
 ---
 apiVersion: v1
 kind: ServiceAccount
