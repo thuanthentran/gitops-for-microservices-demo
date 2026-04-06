@@ -120,5 +120,3 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: loadgenerator
-imagePullSecrets:
-- name: harbor-pull-secret
