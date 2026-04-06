@@ -21,6 +21,7 @@ spec:
         app: emailservice
     spec:
       serviceAccountName: emailservice
+      terminationGracePeriodSeconds: 5
       securityContext:
         fsGroup: 1000
         runAsGroup: 1000
