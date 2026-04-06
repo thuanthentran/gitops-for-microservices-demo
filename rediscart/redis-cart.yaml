@@ -72,7 +72,9 @@ spec:
   ports:
   - name: tcp-redis
     port: 6379
+    protocol: TCP
     targetPort: 6379
+    service: ''
 ---
 apiVersion: v1
 kind: Service
@@ -87,7 +89,9 @@ spec:
   ports:
   - name: tcp-redis
     port: 6379
+    protocol: TCP
     targetPort: 6379
+    service: ''
 ---
 apiVersion: v1
 kind: ServiceAccount
