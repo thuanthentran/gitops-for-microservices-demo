@@ -73,7 +73,9 @@ spec:
   ports:
   - name: grpc
     port: 3550
+    protocol: TCP
     targetPort: 3550
+    service: ''
 ---
 apiVersion: v1
 kind: Service
@@ -88,7 +90,9 @@ spec:
   ports:
   - name: grpc
     port: 3550
+    protocol: TCP
     targetPort: 3550
+    service: ''
 ---
 apiVersion: v1
 kind: ServiceAccount

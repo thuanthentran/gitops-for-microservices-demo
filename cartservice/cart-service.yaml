@@ -39,15 +39,18 @@ spec:
           image: 4.193.154.62/sample-microservice/cartservice:latest
           ports:
           - containerPort: 7070
+            protocol: TCP
           readinessProbe:
             initialDelaySeconds: 15
             grpc:
               port: 7070
+              service: ''
           livenessProbe:
             initialDelaySeconds: 15
             periodSeconds: 10
             grpc:
               port: 7070
+              service: ''
           env:
           - name: REDIS_ADDR
             value: "redis-cart:6379"
@@ -74,7 +77,9 @@ spec:
   ports:
   - name: grpc
     port: 7070
+    protocol: TCP
     targetPort: 7070
+    service: ''
 ---
 apiVersion: v1
 kind: Service
@@ -89,7 +94,9 @@ spec:
   ports:
   - name: grpc
     port: 7070
+    protocol: TCP
     targetPort: 7070
+    service: ''
 ---
 apiVersion: v1
 kind: ServiceAccount

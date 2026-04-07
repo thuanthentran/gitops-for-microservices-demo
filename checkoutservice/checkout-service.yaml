@@ -38,12 +38,15 @@ spec:
           image: 4.193.154.62/sample-microservice/checkoutservice:latest
           ports:
           - containerPort: 5050
+            protocol: TCP
           readinessProbe:
             grpc:
               port: 5050
+              service: ''
           livenessProbe:
             grpc:
               port: 5050
+              service: ''
           env:
           - name: PORT
             value: "5050"
@@ -68,6 +71,7 @@ spec:
               memory: 128Mi
       imagePullSecrets:
       - name: harbor-pull-secret
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -81,7 +85,9 @@ spec:
   ports:
   - name: grpc
     port: 5050
+    protocol: TCP
     targetPort: 5050
+    service: ''
 ---
 apiVersion: v1
 kind: Service
@@ -96,7 +102,9 @@ spec:
   ports:
   - name: grpc
     port: 5050
+    protocol: TCP
     targetPort: 5050
+    service: ''
 ---
 apiVersion: v1
 kind: ServiceAccount
