@@ -21,6 +21,7 @@ spec:
             storageSpec:
               volumeClaimTemplate:
                 spec:
+                  storageClassName: local-path
                   accessModes: [ "ReadWriteOnce" ]
                   resources:
                     requests:
@@ -36,6 +37,7 @@ spec:
         grafana:
           adminPassword: admin123
           persistence:
+            storageClassName: local-path
             enabled: true
             size: 1Gi
           datasources:
@@ -56,6 +58,7 @@ spec:
             storage:
               volumeClaimTemplate:
                 spec:
+                  storageClassName: local-path
                   accessModes: [ "ReadWriteOnce" ]
                   resources:
                     requests:
