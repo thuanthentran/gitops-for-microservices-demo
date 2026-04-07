@@ -1,0 +1,66 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: loki
+    targetRevision: 6.3.4
+
+    helm:
+      values: |
+        loki:
+          persistence:
+            enabled: true
+            size: 5Gi
+          limits_config:
+            max_cache_freshness_per_query: 10m
+          chunk_idle_period: 3m
+          max_chunk_age: 1h
+          schema_config:
+            configs:
+            - from: 2020-10-24
+              store: boltdb-shipper
+              object_store: filesystem
+              schema: v11
+              index:
+                prefix: index_
+                period: 24h
+
+        promtail:
+          enabled: true
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+
+        serviceAccount:
+          create: true
+          name: loki
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: logging
+
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    - RespectIgnoreDifferences=true
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
