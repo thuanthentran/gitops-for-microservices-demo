@@ -1,91 +1,41 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: monitoring
+  name: monitoring-stack
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: https://prometheus-community.github.io/helm-charts
-    chart: kube-prometheus-stack
-    targetRevision: 58.0.0
-    helm:
-      values: |
-        # 1. Cấu hình Prometheus Storage (Dùng Local Path)
-        prometheus:
-          prometheusSpec:
-            retention: 3d
-            storageSpec:
-              volumeClaimTemplate:
-                spec:
-                  storageClassName: local-path
-                  accessModes: ["ReadWriteOnce"]
-                  resources:
-                    requests:
-                      storage: 5Gi
-            resources:
-              requests:
-                cpu: 500m
-                memory: 512Mi
-              limits:
-                cpu: 1000m
-                memory: 1Gi
+  sources:
+    # NGUỒN 1: Helm Chart chính thức (Phần "Xác")
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: 58.0.0
+      helm:
+        # Trỏ đến file values.yaml nằm trong Nguồn 2 bên dưới
+        valueFiles:
+          - $my-configs/monitoring/values.yaml
 
-        # 2. Cấu hình Grafana (Sửa lỗi Default Datasource)
-        grafana:
-          adminPassword: admin123
-          persistence:
-            enabled: true
-            storageClassName: local-path
-            size: 1Gi
-          datasources:
-            datasources.yaml:
-              apiVersion: 1
-              datasources:
-                - name: Prometheus-Manual
-                  type: prometheus
-                  url: http://prometheus-operated.monitoring.svc:9090
-                  isDefault: false # <-- QUAN TRỌNG: Để false để không xung đột với bản tự động của Chart
-                - name: Loki
-                  type: loki
-                  url: http://loki.logging:3100
-                  isDefault: false
-
-        # 3. Cấu hình Alertmanager Storage
-        alertmanager:
-          alertmanagerSpec:
-            storage:
-              volumeClaimTemplate:
-                spec:
-                  storageClassName: local-path
-                  accessModes: ["ReadWriteOnce"]
-                  resources:
-                    requests:
-                      storage: 1Gi
-
-        # 4. Tối ưu tài nguyên cho Node Exporter
-        prometheus-node-exporter:
-          resources:
-            requests:
-              cpu: 50m
-              memory: 32Mi
-            limits:
-              cpu: 100m
-              memory: 64Mi
+    # NGUỒN 2: Repo Git của bạn (Phần "Hồn" và các cấu hình bổ sung)
+    - repoURL: https://github.com/thuanthentran/gitops-for-microservices-demo
+      targetRevision: HEAD
+      ref: my-configs # Định danh nguồn này là 'my-configs'
+      # Path này chứa file ServiceMonitor để monitor ArgoCD Notifications
+      path: monitoring/manifests
 
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
 
   syncPolicy:
-    syncOptions:
-      - CreateNamespace=true
-      - RespectIgnoreDifferences=true
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true # Bắt buộc có để cài đặt CRD mượt mà
+      - RespectIgnoreDifferences=true
     retry:
       limit: 5
       backoff:
