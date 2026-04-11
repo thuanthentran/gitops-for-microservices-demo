@@ -4,7 +4,7 @@ metadata:
   name: argocd-notifications-monitor
   namespace: monitoring # Đặt vào namespace chứa Prometheus
   labels:
-    release: monitoring # QUAN TRỌNG: Phải khớp với label 'release' của Prometheus Stack bạn cài
+    release: monitoring-stack # QUAN TRỌNG: Phải khớp với label 'release' của Prometheus Stack bạn cài
 spec:
   selector:
     matchLabels:
