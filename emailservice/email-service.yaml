@@ -77,7 +77,6 @@ spec:
     port: 5000
     protocol: TCP
     targetPort: 8080
-    service: ''
 ---
 apiVersion: v1
 kind: Service
@@ -94,7 +93,6 @@ spec:
     port: 5000
     protocol: TCP
     targetPort: 8080
-    service: ''
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -110,7 +108,7 @@ spec:
     apiVersion: argoproj.io/v1alpha1
     kind: Rollout
     name: emailservice
-  minReplicas: 2
+  minReplicas: 1
   maxReplicas: 5
   metrics:
   - type: Resource

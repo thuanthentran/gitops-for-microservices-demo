@@ -44,13 +44,11 @@ spec:
             initialDelaySeconds: 15
             grpc:
               port: 7070
-              service: ''
           livenessProbe:
             initialDelaySeconds: 15
             periodSeconds: 10
             grpc:
               port: 7070
-              service: ''
           env:
           - name: REDIS_ADDR
             value: "redis-cart:6379"
@@ -79,7 +77,6 @@ spec:
     port: 7070
     protocol: TCP
     targetPort: 7070
-    service: ''
 ---
 apiVersion: v1
 kind: Service
@@ -96,7 +93,6 @@ spec:
     port: 7070
     protocol: TCP
     targetPort: 7070
-    service: ''
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -112,7 +108,7 @@ spec:
     apiVersion: argoproj.io/v1alpha1
     kind: Rollout
     name: cartservice
-  minReplicas: 2
+  minReplicas: 1
   maxReplicas: 5
   metrics:
   - type: Resource

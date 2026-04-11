@@ -75,7 +75,6 @@ spec:
     port: 50051
     protocol: TCP
     targetPort: 50051
-    service: ''
 ---
 apiVersion: v1
 kind: Service
@@ -92,7 +91,6 @@ spec:
     port: 50051
     protocol: TCP
     targetPort: 50051
-    service: ''
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -108,7 +106,7 @@ spec:
     apiVersion: argoproj.io/v1alpha1
     kind: Rollout
     name: shippingservice
-  minReplicas: 2
+  minReplicas: 1
   maxReplicas: 5
   metrics:
   - type: Resource

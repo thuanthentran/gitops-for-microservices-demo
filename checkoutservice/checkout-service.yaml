@@ -42,11 +42,9 @@ spec:
           readinessProbe:
             grpc:
               port: 5050
-              service: ''
           livenessProbe:
             grpc:
               port: 5050
-              service: ''
           env:
           - name: PORT
             value: "5050"
@@ -87,7 +85,6 @@ spec:
     port: 5050
     protocol: TCP
     targetPort: 5050
-    service: ''
 ---
 apiVersion: v1
 kind: Service
@@ -104,7 +101,6 @@ spec:
     port: 5050
     protocol: TCP
     targetPort: 5050
-    service: ''
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -120,7 +116,7 @@ spec:
     apiVersion: argoproj.io/v1alpha1
     kind: Rollout
     name: checkoutservice
-  minReplicas: 2
+  minReplicas: 1
   maxReplicas: 5
   metrics:
   - type: Resource
