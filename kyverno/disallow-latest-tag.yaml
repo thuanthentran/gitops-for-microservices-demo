@@ -1,0 +1,19 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: disallow-latest-tag
+spec:
+  validationFailureAction: Audit
+  rules:
+  - name: check-image-tag
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+    validate:
+      message: "Không được dùng tag 'latest'. Hãy chỉ định phiên bản cụ thể."
+      pattern:
+        spec:
+          containers:
+          - image: "!*:latest"

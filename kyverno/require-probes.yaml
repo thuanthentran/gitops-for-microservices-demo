@@ -1,0 +1,20 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-probes
+spec:
+  validationFailureAction: Audit
+  rules:
+  - name: check-probes
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+    validate:
+      message: "Container phải có cả livenessProbe và readinessProbe."
+      pattern:
+        spec:
+          containers:
+          - livenessProbe: {}
+            readinessProbe: {}
