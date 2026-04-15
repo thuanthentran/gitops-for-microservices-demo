@@ -1,0 +1,21 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: restrict-nodeport
+spec:
+  validationFailureAction: Audit
+  rules:
+  - name: validate-nodeport
+    match:
+      any:
+      - resources:
+          kinds:
+          - Service
+    validate:
+      message: "Không được dùng Service Type NodePort. Hãy dùng ClusterIP hoặc Ingress."
+      deny:
+        conditions:
+          all:
+          - key: "{{ request.object.spec.type }}"
+            operator: Equals
+            value: NodePort
