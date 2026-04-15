@@ -1,28 +1,56 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: monitoring-stack
+  name: kube-prometheus-stack
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  sources:
-    # NGUỒN 1: Helm Chart chính thức (Phần "Xác")
-    - repoURL: https://prometheus-community.github.io/helm-charts
-      chart: kube-prometheus-stack
-      targetRevision: 58.0.0
-      helm:
-        # Trỏ đến file values.yaml nằm trong Nguồn 2 bên dưới
-        valueFiles:
-          - $my-configs/monitoring/values.yaml
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
 
-    # NGUỒN 2: Repo Git của bạn (Phần "Hồn" và các cấu hình bổ sung)
-    - repoURL: https://github.com/thuanthentran/gitops-for-microservices-demo
-      targetRevision: HEAD
-      ref: my-configs # Định danh nguồn này là 'my-configs'
-      # Path này chứa file ServiceMonitor để monitor ArgoCD Notifications
-      path: monitoring/manifests
+    chart: kube-prometheus-stack
+
+    targetRevision: 69.3.1
+    helm:
+      values: |
+
+        prometheus:
+          prometheusSpec:
+            storage:
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: "local-path"
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 10Gi
+          service:
+            type: NodePort
+
+
+        grafana:
+          initChownData:
+            enabled: false
+          
+          podSecurityContext:
+            fsGroup: 472
+            runAsGroup: 472
+            runAsUser: 472
+
+          persistence:
+            enabled: true
+            size: 5Gi
+            storageClassName: "local-path"
+
+          service:
+            type: NodePort
+
+
+        alertmanager:
+          service:
+            type: NodePort
 
   destination:
     server: https://kubernetes.default.svc
@@ -34,11 +62,6 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true # Bắt buộc có để cài đặt CRD mượt mà
-      - RespectIgnoreDifferences=true
-    retry:
-      limit: 5
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 3m
+
+      - ServerSideApply=true
+      - SkipDryRunOnMissingResource=true
