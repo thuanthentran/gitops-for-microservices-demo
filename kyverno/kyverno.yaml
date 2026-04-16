@@ -35,7 +35,7 @@ metadata:
 spec:
   source:
     repoURL: https://github.com/thuanthentran/gitops-for-microservices-demo
-    path: kyverno/policies  # <--- Trỏ đến thư mục chứa disallow-latest-tag.yaml, v.v.
+    path: kyverno/policies 
     targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
