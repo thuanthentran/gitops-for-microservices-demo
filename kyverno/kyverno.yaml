@@ -31,6 +31,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: kyverno-policies
+  namespace: argocd
 spec:
   source:
     repoURL: https://github.com/thuanthentran/gitops-for-microservices-demo
