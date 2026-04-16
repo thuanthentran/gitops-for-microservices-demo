@@ -14,13 +14,15 @@ spec:
         loki:
           persistence:
             enabled: true
-            storageClassName: "local-path" # Dùng chung storage class bạn đang có
+            storageClassName: "local-path"
             size: 5Gi
         promtail:
           enabled: true
+        datasource:
+          isDefault: false
   destination:
     server: https://kubernetes.default.svc
-    namespace: monitoring # Nên để chung namespace cho dễ quản lý
+    namespace: monitoring
   syncPolicy:
     automated:
       prune: true
